@@ -1,0 +1,7 @@
+go 1.23.6
+
+use (
+	./gokits
+	./order-service
+	./proto
+)

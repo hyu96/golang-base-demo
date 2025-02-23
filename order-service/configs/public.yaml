@@ -1,0 +1,93 @@
+Env:
+  Environment: "Dev"
+  DCName: "dc1"
+  PodName: "product-service-x"
+  PodID: "oxoxoxox"
+  ServiceName: "product-service"
+  Timeout: 10
+  ShutdownTimeout: 15
+
+Log:
+  Development: false
+  LogDir: "log"
+  # LogFileLevel: "info"
+  LogConsoleLevel: "info"
+  Description: "Must set write-permission for /var/log/product-service/"
+
+Server:
+  Http:
+    Port: ":9107"
+  Grpc:
+    Port: ":9108"
+
+Client:
+  Grpc:
+    - RegionDC: "dc1"
+      ServiceName: "point-management-service"
+      ServerID: "point-management-service-1"
+      Addr: "127.0.0.1:9091"
+      UserName: ""
+      Password: ""
+      Balancer: "rls"
+    - ServiceName: "campaign_service.CampaignService"
+      ServerID: "campaign-service-1"
+      Addr: "127.0.0.1:9113"
+      UserName: ""
+      Password: ""
+      Balancer: "rls"
+
+Redis:
+  - Name: "cache"
+    Addr: "127.0.0.1:6379"
+    Idle: 100
+    Active: 100
+    DialTimeout: 1
+    ReadTimeout: 1
+    WriteTimeout: 1
+    IdleTimeout: 10
+    DBNum: 0
+    MaxRetries": 3
+
+Postgres:
+  - Name: "order_service"
+    Host: "localhost"
+    Port: "6432"
+    DbName: "demo"
+    SSLMODE: disable
+    UserName: "demo-user"
+    Password: "demo-password"
+    Active: 50
+    Idle: 50
+    Lifetime: 60
+
+Kafka:
+  Addrs:
+    - "1.53.252.177:29091"
+  Port: "29091"
+  NumPartitions: 1
+  ReplicationFactor: 1
+  ProducerTopics:
+    - "inventory.items.update-status.reserve-product"
+    - "inventory.items.update-status.revert-reserve-product"
+    - "inventory.items.update-status.deduct"
+    - "inventory.items.update-status.revert-deduct"
+  Timeout: 10
+
+Jobs:
+  CheckShipped:
+    Run: true
+    Minutes: 60
+  PullProductToQueue:
+    ScheduleMinutes: 60
+
+JWT:
+  SecretKey: "healglobal"
+  RedisPrefix: "icom_authorization_server"
+
+Storage:
+  ImageFolder: "/home/sysadmin/ohke/data"
+  ImageReaderPath: "8854/gup2start/rest/product/api/v2.0/imageReader"
+
+DOMAIN_ROOT: "https://api.sandbox.mypoint.com.vn"
+AES_KEY_1_0_0: "Yan.(-123"
+AES_KEY_GIFTPOP: "SEAKOVMV1RABDS8B" # key decrypt from giftpop
