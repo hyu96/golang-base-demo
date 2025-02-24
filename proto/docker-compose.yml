@@ -1,0 +1,11 @@
+version: "3.4"
+
+services:
+  generate_go:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    working_dir: /proto/
+    volumes:
+      - "../proto/:/proto/"
+    entrypoint: /proto/gen_proto_go.sh

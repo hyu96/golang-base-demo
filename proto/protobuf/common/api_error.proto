@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package common;
+
+option go_package = "github.com/huydq/gen-go/common;com";
+option optimize_for = CODE_SIZE;
+
+message ApiError {
+    int32 code = 1;
+    int32 error_code = 2;
+    string message = 3;
+    int32 wait_for = 4;
+}
