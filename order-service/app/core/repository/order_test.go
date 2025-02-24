@@ -5,6 +5,7 @@ import (
 	"database/sql/driver"
 	"errors"
 	"github.com/DATA-DOG/go-sqlmock"
+	csql "github.com/huydq/gokits/libs/storage/pg-client"
 	"github.com/huydq/order-service/app/core/models"
 	"github.com/huydq/order-service/util"
 	"github.com/jmoiron/sqlx"
@@ -17,17 +18,19 @@ import (
 type OrderRepositoryTestSuite struct {
 	suite.Suite
 	mockDB     sqlmock.Sqlmock
-	sqlxDB    *sqlx.DB
+	sqlxDB     *sqlx.DB
 	repository OrderRepository
 }
 
 func (suite *OrderRepositoryTestSuite) SetupTest() {
-	db, mock, err := sqlmock.Newx()
+	mockDb, mock, err := sqlmock.New()
+	defer mockDb.Close()
+	sqlxDB := sqlx.NewDb(mockDb, "sqlmock")
 	if err != nil {
 		suite.T().Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
 	suite.mockDB = mock
-	suite.sqlxDB = db
+	suite.sqlxDB = sqlxDB
 	suite.repository = OrderRepository{orderClient: csql.BasePostgresSqlxDB{Client: suite.sqlxDB}}
 }
 
