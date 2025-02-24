@@ -41,7 +41,7 @@ func (o OrderRepository) CreateOrder(ctx context.Context, orderAgg models.OrderA
 		itemsQuery = sqlx.Rebind(sqlx.DOLLAR, itemsQuery)
 		_, err = o.orderClient.GetTx(tx).ExecContext(tx, itemsQuery, itemValueArgs...)
 		if err != nil {
-			log.Errorf("Create order failed", err.Error())
+			log.Errorf("Create order item failed", err.Error())
 			return err
 		}
 

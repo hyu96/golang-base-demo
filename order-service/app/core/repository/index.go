@@ -7,6 +7,12 @@ import (
 	"github.com/huydq/order-service/app/core/models"
 )
 
+//go:generate mockgen -source=index.go -destination=../mocks/index.go
+
+type IOrderRepository interface {
+	CreateOrder(ctx context.Context, orderAgg models.OrderAggregate) (int, error)
+}
+
 type OrderRepository struct {
 	orderClient csql.BasePostgresSqlxDB
 }
@@ -28,7 +34,3 @@ func NewOrderRepository(client OrderPostgresClient) *OrderRepository {
 }
 
 var ProviderSet = wire.NewSet(NewOrderRepository, NewOrderPostgresClient)
-
-type IOrderRepository interface {
-	CreateOrder(ctx context.Context, orderAgg models.OrderAggregate) (int, error)
-}
