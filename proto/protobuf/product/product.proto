@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package product_management_service;
+
+option go_package = "github.com/huydq/proto/gen-go/product-management-service;pbProductMgmt";
+option optimize_for = CODE_SIZE;
+
+service ProductManagementService {
+  rpc GetProducts(GetProductRequest) returns (GetProductResponse);
+}
+
+// Order Model
+message GetProductRequest {
+  repeated int32 id = 1;
+}
+
+message GetProductResponse {
+  repeated Product products = 1;
+}
+
+// Order Item Model
+message Product {
+  int32 id = 1;
+  string name = 2;
+  float price = 3;
+}

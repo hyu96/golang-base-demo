@@ -22,16 +22,9 @@ Server:
 
 Client:
   Grpc:
-    - RegionDC: "dc1"
-      ServiceName: "point-management-service"
-      ServerID: "point-management-service-1"
-      Addr: "127.0.0.1:9091"
-      UserName: ""
-      Password: ""
-      Balancer: "rls"
-    - ServiceName: "campaign_service.CampaignService"
-      ServerID: "campaign-service-1"
-      Addr: "127.0.0.1:9113"
+    - ServiceName: "product-service"
+      ServerID: "product-service"
+      Addr: "127.0.0.1:9108"
       UserName: ""
       Password: ""
       Balancer: "rls"

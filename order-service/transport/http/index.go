@@ -3,6 +3,7 @@ package http_server
 import (
 	"flag"
 	"github.com/carlmjohnson/versioninfo"
+	"github.com/huydq/gokits/libs/client/grpc"
 	"github.com/huydq/order-service/app/core/repository"
 
 	"github.com/huydq/gokits/app"
@@ -32,6 +33,8 @@ func StartHttpServer() {
 
 	csql.InstallSQLClientManager()
 	credis.InstallRedisClientManager()
+	grpc.InstallRPCClient()
+
 	orderPgClient := repository.NewOrderPostgresClient(csql.NewBasePostgresSqlxDB(csql.DB_ORDER_SERVICE))
 	if orderPgClient == nil {
 		panic("Get postgres client failed")

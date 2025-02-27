@@ -4,7 +4,6 @@ import (
 	"net"
 	"os"
 
-	grpc_auth "github.com/grpc-ecosystem/go-grpc-middleware/auth"
 	"github.com/spf13/viper"
 	"go.elastic.co/apm/module/apmgrpc/v2"
 	"go.elastic.co/apm/v2"
@@ -47,7 +46,6 @@ func NewRPCServer() *RPCServer {
 	s.s = grpc.NewServer(
 		// unary
 		grpc_middleware.WithUnaryServerChain(
-			grpc_auth.UnaryServerInterceptor(rpcAuthFunc),
 			grpc_recovery.UnaryServerInterceptor(opts...),
 			grpc_opentracing.UnaryServerInterceptor(grpc_opentracing.WithTraceHeaderName("icom-tracer-id")),
 			apmgrpc.NewUnaryServerInterceptor(apmgrpc.WithTracer(apmTracer)),
@@ -55,7 +53,6 @@ func NewRPCServer() *RPCServer {
 
 		// stream
 		grpc_middleware.WithStreamServerChain(
-			grpc_auth.StreamServerInterceptor(rpcAuthFunc),
 			grpc_recovery.StreamServerInterceptor(opts...),
 			grpc_opentracing.StreamServerInterceptor(grpc_opentracing.WithTraceHeaderName("icom-tracer-id")),
 			apmgrpc.NewStreamServerInterceptor(apmgrpc.WithTracer(apmTracer)),

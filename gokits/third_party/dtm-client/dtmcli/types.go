@@ -37,7 +37,7 @@ func SetBarrierTableName(tablename string) {
 	dtmimp.BarrierTableName = tablename
 }
 
-// GetRestyClient get the resty.Client for http request
+// GetRestyClient get the resty.Client for grpc request
 func GetRestyClient() *resty.Client {
 	return dtmimp.GetRestyClient2(0)
 }

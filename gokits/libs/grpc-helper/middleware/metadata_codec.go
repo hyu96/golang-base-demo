@@ -10,7 +10,6 @@ import (
 	"google.golang.org/protobuf/proto"
 
 	"github.com/huydq/gokits/libs/ilog"
-	com "github.com/huydq/proto/gen-go/common"
 )
 
 var (
@@ -36,20 +35,6 @@ func RPCMetadataFromMD(md metadata.MD) (*RpcMetadata, error) {
 	}
 
 	return rpcMetadata, nil
-}
-
-func RPCMetadataFromIncoming(ctx context.Context) *RpcMetadata {
-	md2, ok := metadata.FromIncomingContext(ctx)
-	if !ok {
-		return nil
-	}
-
-	md, err := RPCMetadataFromMD(md2)
-	if err != nil {
-		panic(com.NewApiError(com.KErrorCode_ERR_OTHER, fmt.Sprintf("%s", err)))
-	}
-
-	return md
 }
 
 func RPCMetadataToOutgoing(ctx context.Context, md *RpcMetadata) (context.Context, error) {

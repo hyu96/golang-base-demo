@@ -16,7 +16,7 @@ import (
 	"google.golang.org/grpc"
 )
 
-// InitHTTP will init Workflow engine to use http
+// InitHTTP will init Workflow engine to use grpc
 // param httpDtm specify the dtm address
 // param callback specify the url for dtm to callback if a workflow timeout
 func InitHTTP(httpDtm string, callback string) {

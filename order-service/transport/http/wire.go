@@ -5,6 +5,7 @@ package http_server
 
 import (
 	"github.com/google/wire"
+	"github.com/huydq/order-service/app/adapter/grpc_client"
 	"github.com/huydq/order-service/app/core/repository"
 	"github.com/huydq/order-service/app/core/service"
 	order_handler "github.com/huydq/order-service/transport/http/handler"
@@ -22,7 +23,8 @@ func wireApp(httpServer *httpserver.HttpServer, orderClient repository.OrderPost
 		order_handler.ProviderSet,
 		service.ProviderSet,
 		repository.NewOrderRepository,
-		//wire.Struct(new(repository.OrderRepository)),
 		wire.Bind(new(repository.IOrderRepository), new(*repository.OrderRepository)),
+		grpc_client.NewGrpcProductMgmtServiceClient,
+		wire.Bind(new(grpc_client.IGrpcProductServiceClient), new(*grpc_client.GrpcProductServiceClient)),
 	))
 }

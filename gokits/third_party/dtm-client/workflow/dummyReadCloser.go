@@ -6,7 +6,7 @@ import (
 )
 
 // NewRespBodyFromBytes creates an io.ReadCloser from a byte slice
-// that is suitable for use as an http response body.
+// that is suitable for use as an grpc response body.
 func NewRespBodyFromBytes(body []byte) io.ReadCloser {
 	return &dummyReadCloser{body: bytes.NewReader(body)}
 }

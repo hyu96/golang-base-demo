@@ -20,7 +20,7 @@ func setupHttpServerConfig() {
 	}
 
 	if Config.Port == "" {
-		panic("http port empty!")
+		panic("grpc port empty!")
 	}
 
 	env.Config().Addr = Config.Port

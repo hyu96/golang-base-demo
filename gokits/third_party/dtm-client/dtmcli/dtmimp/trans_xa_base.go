@@ -30,7 +30,7 @@ func XaHandlePhase2(gid string, dbConf DBConf, branchID string, op string) error
 	return err
 }
 
-// XaHandleLocalTrans public handler of LocalTransaction via http/grpc
+// XaHandleLocalTrans public handler of LocalTransaction via grpc/grpc
 func XaHandleLocalTrans(xa *TransBase, dbConf DBConf, cb func(*sql.DB) error) (rerr error) {
 	xaBranch := xa.Gid + "-" + xa.BranchID
 	db, rerr := XaDB(dbConf)
@@ -60,7 +60,7 @@ func XaHandleLocalTrans(xa *TransBase, dbConf DBConf, cb func(*sql.DB) error) (r
 	return
 }
 
-// XaHandleGlobalTrans http/grpc GlobalTransaction shared func
+// XaHandleGlobalTrans grpc/grpc GlobalTransaction shared func
 func XaHandleGlobalTrans(xa *TransBase, callDtm func(string) error, callBusi func() error) (rerr error) {
 	rerr = callDtm("prepare")
 	if rerr != nil {

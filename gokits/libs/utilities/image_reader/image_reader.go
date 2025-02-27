@@ -71,7 +71,7 @@ func (r *ImageReader) SqlPath(alias string, field string, hasTime bool, workingS
 }
 
 func (r *ImageReader) PlatformImageReaderEncode(path, prefixPath string, createTime, updateTime time.Time) string {
-	if len(path) > 4 && path[0:4] == "http" {
+	if len(path) > 4 && path[0:4] == "grpc" {
 		return path
 	}
 	d := r.DOMAIN_ROOT
@@ -156,11 +156,11 @@ func (r *ImageReader) PlatformImageReaderDecode(encryptedStr string) (string, bo
 // 		}
 // 		return path
 // 	}
-// 	if strings.HasPrefix(val, "http") {
+// 	if strings.HasPrefix(val, "grpc") {
 // 		// Redirect to external URL
 // 		// Note: this requires access to the ResponseWriter object
 // 		// w.Header().Set("Location", val)
-// 		// w.WriteHeader(http.StatusFound)
+// 		// w.WriteHeader(grpc.StatusFound)
 // 		return ""
 // 	}
 // 	path = r.DATA_ROOT_PATH + val

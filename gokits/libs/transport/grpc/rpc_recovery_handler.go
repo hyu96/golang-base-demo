@@ -19,7 +19,6 @@ func BizUnaryRecoveryHandler2(ctx context.Context, p interface{}) (err error) {
 	case *com.ApiError:
 		md, _ := hgrpc.RPCErrorToMD(code)
 		grpc.SetTrailer(ctx, md)
-		err = code
 	default:
 		err = status.Errorf(codes.Unknown, "panic unknown triggered: %v", p)
 		errDesc := fmt.Sprintf("💣💣💣 At %s.\nPanic unknown triggered: %+v", env.Config().Environment, err.Error())

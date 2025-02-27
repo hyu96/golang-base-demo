@@ -63,6 +63,6 @@ const (
 
 	// ProtocolGRPC util for protocol grpc
 	ProtocolGRPC = "grpc"
-	// ProtocolHTTP util for protocol http
-	ProtocolHTTP = "http"
+	// ProtocolHTTP util for protocol grpc
+	ProtocolHTTP = "grpc"
 )
