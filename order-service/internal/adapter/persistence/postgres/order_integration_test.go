@@ -1,9 +1,9 @@
-package postgres_test
+package postgres
 
 import (
 	"context"
 	"fmt"
-	"github.com/huydq/order-service/internal/adapter/persistence/postgres"
+	csql "github.com/huydq/gokits/libs/storage/pg-client"
 	"github.com/huydq/order-service/internal/core/domain/model"
 	"github.com/huydq/order-service/util"
 	"github.com/jmoiron/sqlx"
@@ -16,7 +16,7 @@ import (
 	"time"
 )
 
-var orderRepository *postgres.OrderRepository
+var orderRepository *OrderRepository
 var db *sqlx.DB
 
 func TestMain(m *testing.M) {
@@ -59,7 +59,8 @@ func TestMain(m *testing.M) {
 	if err != nil {
 		log.Fatalf("Failed to connect to database: %v", err)
 	}
-	orderRepository = postgres.NewOrderRepository(postgres.OrderPostgresClient{db: postgres.BasePostgresSqlxDB{Client: db}})
+
+	orderRepository = NewOrderRepository(OrderPostgresClient{db: csql.BasePostgresSqlxDB{Client: db}})
 
 	// Run the tests
 	code := m.Run()
