@@ -4,7 +4,7 @@ Copyright © 2025 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"github.com/huydq/order-service/transport/http"
+	"github.com/huydq/order-service/internal/transport/http"
 	"github.com/spf13/cobra"
 )
 

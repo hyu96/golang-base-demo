@@ -1,6 +1,6 @@
 package iconst
 
-const ( // product models code
+const ( // product model code
 	PRODUCT_MODEL_VOUCHER        = "PRODUCT_MODEL_VOUCHER"
 	PRODUCT_MODEL_MOBILE_CARD    = "PRODUCT_MODEL_MOBILE_CARD"
 	PRODUCT_MODEL_MOBILE_SERVICE = "PRODUCT_MODEL_MOBILE_SERVICE"

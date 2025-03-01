@@ -4,7 +4,7 @@ import (
 	"github.com/go-playground/validator"
 )
 
-// Validates models before do something
+// Validates model before do something
 func IsValid(m interface{}) (bool, error) {
 	validate := validator.New()
 
