@@ -3,6 +3,11 @@ package postgres
 import (
 	"context"
 	"fmt"
+	"log"
+	"os"
+	"testing"
+	"time"
+
 	csql "github.com/huydq/gokits/libs/storage/pg-client"
 	"github.com/huydq/order-service/internal/core/domain/model"
 	"github.com/huydq/order-service/util"
@@ -10,10 +15,6 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
-	"log"
-	"os"
-	"testing"
-	"time"
 )
 
 var orderRepository *OrderRepository
@@ -61,7 +62,7 @@ func TestMain(m *testing.M) {
 	}
 
 	// Read and execute SQL script from file
-	sqlScript, err := os.ReadFile("internal/adapter/persistence/postgres/test/init.sql")
+	sqlScript, err := os.ReadFile("test/init.sql")
 	if err != nil {
 		log.Fatalf("Failed to read SQL script: %v", err)
 	}
