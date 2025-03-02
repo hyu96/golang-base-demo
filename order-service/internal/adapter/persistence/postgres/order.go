@@ -4,13 +4,13 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strings"
+
 	"github.com/gofiber/fiber/v2/log"
-	"github.com/google/wire"
 	csql "github.com/huydq/gokits/libs/storage/pg-client"
 	"github.com/huydq/order-service/internal/core/domain/model"
 	"github.com/huydq/order-service/util"
 	"github.com/jmoiron/sqlx"
-	"strings"
 )
 
 type OrderRepository struct {
@@ -33,8 +33,6 @@ func NewOrderRepository(client OrderPostgresClient) *OrderRepository {
 	}
 }
 
-var ProviderSet = wire.NewSet(NewOrderRepository, NewOrderPostgresClient)
-
 func (o OrderRepository) CreateOrder(ctx context.Context, orderAgg model.OrderAggregate) (int, error) {
 	var orderID int
 	err := o.orderClient.Transaction(ctx, func(tx context.Context) error {
@@ -48,7 +46,7 @@ func (o OrderRepository) CreateOrder(ctx context.Context, orderAgg model.OrderAg
 		row := o.orderClient.GetTx(tx).QueryRowxContext(tx, orderQuery, orderArgs...)
 		err := row.Scan(&orderID)
 		if err != nil {
-			log.Errorf("Create order failed", err.Error())
+			log.Errorf("Create order failed: %s", err.Error())
 			return err
 		}
 
@@ -65,7 +63,7 @@ func (o OrderRepository) CreateOrder(ctx context.Context, orderAgg model.OrderAg
 		itemsQuery = sqlx.Rebind(sqlx.DOLLAR, itemsQuery)
 		_, err = o.orderClient.GetTx(tx).ExecContext(tx, itemsQuery, itemValueArgs...)
 		if err != nil {
-			log.Errorf("Create order item failed", err.Error())
+			log.Errorf("Create order item failed: %s", err.Error())
 			return err
 		}
 
@@ -73,7 +71,7 @@ func (o OrderRepository) CreateOrder(ctx context.Context, orderAgg model.OrderAg
 	})
 
 	if err != nil {
-		log.Errorf("Create order failed aggregate", err.Error())
+		log.Errorf("Create order failed aggregate: %s", err.Error())
 		return 0, errors.New(util.ERR_INTERNAL_SERVER_ERROR)
 	}
 
