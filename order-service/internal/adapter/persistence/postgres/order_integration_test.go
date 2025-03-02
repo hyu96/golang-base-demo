@@ -94,9 +94,10 @@ func TestOrderRepositoryIntegrationTestSuite(t *testing.T) {
 
 func (suite *OrderRepositoryIntegrationTestSuite) TestCreateOrder() {
 	testCases := []struct {
-		name        string
-		orderAgg    model.OrderAggregate
-		expectError bool
+		name         string
+		orderAgg     model.OrderAggregate
+		expectError  bool
+		expectedError string // Add this field
 	}{
 		{
 			name: "Success - create order with single item",
@@ -156,6 +157,7 @@ func (suite *OrderRepositoryIntegrationTestSuite) TestCreateOrder() {
 				},
 			},
 			expectError: true,
+			expectedError: "invalid total amount: must be greater than 0",
 		},
 	}
 
@@ -166,6 +168,9 @@ func (suite *OrderRepositoryIntegrationTestSuite) TestCreateOrder() {
 			if tc.expectError {
 				assert.Error(suite.T(), err)
 				assert.Equal(suite.T(), 0, orderID)
+				if tc.expectedError != "" {
+					assert.Contains(suite.T(), err.Error(), tc.expectedError)
+				}
 			} else {
 				assert.NoError(suite.T(), err)
 				assert.Greater(suite.T(), orderID, 0)
