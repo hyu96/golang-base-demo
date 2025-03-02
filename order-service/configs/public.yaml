@@ -81,6 +81,12 @@ Storage:
   ImageFolder: "/home/sysadmin/ohke/data"
   ImageReaderPath: "8854/gup2start/rest/product/api/v2.0/imageReader"
 
+APM:
+  ServerURL: "http://localhost:8200"
+  ServiceName: "golang-apm-service"
+  Environment: "development"
+  LogLevel: "debug"
+
 DOMAIN_ROOT: "https://api.sandbox.mypoint.com.vn"
 AES_KEY_1_0_0: "Yan.(-123"
 AES_KEY_GIFTPOP: "SEAKOVMV1RABDS8B" # key decrypt from giftpop

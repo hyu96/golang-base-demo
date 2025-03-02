@@ -45,6 +45,8 @@ func InitServer(configPath string) {
 
 	// Init log
 	ilog.InitLogger()
+
+	env.LoadAPMConfig()
 }
 
 var ch = make(chan os.Signal, 1)

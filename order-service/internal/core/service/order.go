@@ -14,7 +14,7 @@ import (
 // CreateOrder handles order creation
 func (uc *OrderService) CreateOrder(ctx context.Context, orderDto dto.CreateOrderRequestDTO) (*dto.CreateOrderResponseDTO, error) {
 	// Start APM transaction
-	tx := apm.DefaultTracer.StartTransaction("CreateOrder", "request")
+	tx := apm.DefaultTracer().StartTransaction("CreateOrder", "request")
 	defer tx.End()
 	ctx = apm.ContextWithTransaction(ctx, tx)
 
@@ -65,7 +65,7 @@ func (uc *OrderService) CreateOrder(ctx context.Context, orderDto dto.CreateOrde
 	span, ctx = apm.StartSpan(ctx, "CreateOrderDB", "database")
 	orderId, err := uc.orderRepo.CreateOrder(ctx, orderAgg)
 	span.End()
-	
+
 	if err != nil {
 		log.Errorf("Create Order failed", err.Error())
 		apm.CaptureError(ctx, err).Send()

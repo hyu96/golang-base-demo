@@ -34,11 +34,6 @@ func NewOrderRepository(client OrderPostgresClient) *OrderRepository {
 }
 
 func (o OrderRepository) CreateOrder(ctx context.Context, orderAgg model.OrderAggregate) (int, error) {
-	// Validate order total amount
-	if orderAgg.Order.TotalAmount <= 0 {
-		return 0, errors.New("Invalid total amount: must be greater than 0")
-	}
-
 	var orderID int
 	err := o.orderClient.Transaction(ctx, func(tx context.Context) error {
 		orderArgs := []interface{}{

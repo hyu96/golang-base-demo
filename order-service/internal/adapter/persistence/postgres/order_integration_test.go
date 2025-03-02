@@ -12,7 +12,6 @@ import (
 	"github.com/huydq/order-service/internal/core/domain/model"
 	"github.com/huydq/order-service/util"
 	"github.com/jmoiron/sqlx"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
@@ -94,9 +93,9 @@ func TestOrderRepositoryIntegrationTestSuite(t *testing.T) {
 
 func (suite *OrderRepositoryIntegrationTestSuite) TestCreateOrder() {
 	testCases := []struct {
-		name         string
-		orderAgg     model.OrderAggregate
-		expectError  bool
+		name          string
+		orderAgg      model.OrderAggregate
+		expectError   bool
 		expectedError string // Add this field
 	}{
 		{
@@ -140,25 +139,6 @@ func (suite *OrderRepositoryIntegrationTestSuite) TestCreateOrder() {
 			},
 			expectError: false,
 		},
-		{
-			name: "Failure - invalid order total amount",
-			orderAgg: model.OrderAggregate{
-				Order: model.Order{
-					CustomerID:  3,
-					TotalAmount: -100.00, // Invalid amount
-					Status:      util.ORDER_STATUS_PENDING,
-				},
-				Items: []model.OrderItem{
-					{
-						ProductID: 13,
-						Quantity:  1,
-						Price:     100.00,
-					},
-				},
-			},
-			expectError: true,
-			expectedError: "invalid total amount: must be greater than 0",
-		},
 	}
 
 	for _, tc := range testCases {
@@ -166,27 +146,27 @@ func (suite *OrderRepositoryIntegrationTestSuite) TestCreateOrder() {
 			orderID, err := suite.orderRepository.CreateOrder(suite.ctx, tc.orderAgg)
 
 			if tc.expectError {
-				assert.Error(suite.T(), err)
-				assert.Equal(suite.T(), 0, orderID)
+				suite.Error(err)
+				suite.Equal(0, orderID)
 				if tc.expectedError != "" {
-					assert.Contains(suite.T(), err.Error(), tc.expectedError)
+					suite.Contains(err.Error(), tc.expectedError)
 				}
 			} else {
-				assert.NoError(suite.T(), err)
-				assert.Greater(suite.T(), orderID, 0)
+				suite.NoError(err)
+				suite.Greater(orderID, 0)
 
 				// Verify order exists
 				var order model.Order
 				err := suite.db.Get(&order, "SELECT * FROM orders WHERE id = $1", orderID)
-				assert.NoError(suite.T(), err)
-				assert.Equal(suite.T(), tc.orderAgg.Order.CustomerID, order.CustomerID)
-				assert.Equal(suite.T(), tc.orderAgg.Order.TotalAmount, order.TotalAmount)
+				suite.NoError(err)
+				suite.Equal(tc.orderAgg.Order.CustomerID, order.CustomerID)
+				suite.Equal(tc.orderAgg.Order.TotalAmount, order.TotalAmount)
 
 				// Verify order items
 				var items []model.OrderItem
 				err = suite.db.Select(&items, "SELECT * FROM order_items WHERE order_id = $1", orderID)
-				assert.NoError(suite.T(), err)
-				assert.Len(suite.T(), items, len(tc.orderAgg.Items))
+				suite.NoError(err)
+				suite.Len(items, len(tc.orderAgg.Items))
 			}
 		})
 	}

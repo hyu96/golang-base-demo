@@ -4,14 +4,15 @@ import (
 	"context"
 	"database/sql/driver"
 	"errors"
+	"regexp"
+	"testing"
+
 	"github.com/DATA-DOG/go-sqlmock"
 	csql "github.com/huydq/gokits/libs/storage/pg-client"
 	"github.com/huydq/order-service/internal/core/domain/model"
 	"github.com/huydq/order-service/util"
 	"github.com/jmoiron/sqlx"
 	"github.com/stretchr/testify/suite"
-	"regexp"
-	"testing"
 )
 
 type OrderRepositoryTestSuite struct {
