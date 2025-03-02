@@ -9,6 +9,7 @@ import (
 	credis "github.com/huydq/gokits/libs/storage/redis"
 	httpserver "github.com/huydq/gokits/libs/transport/http"
 	"github.com/huydq/order-service/internal/adapter/persistence/postgres"
+	"go.elastic.co/apm/v2"
 )
 
 // go build -ldflags "-X main.Version=x.y.z"
@@ -26,6 +27,9 @@ func StartHttpServer() {
 
 	flag.Parse()
 
+	// Initialize APM
+	apm.DefaultTracer.Close()
+	
 	app.InitServer(flagconf) // need to do at first
 
 	httpServer := httpserver.NewHttpServer()

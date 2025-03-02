@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"github.com/huydq/order-service/internal/core/domain/dto"
+	"go.elastic.co/apm/v2"
 
 	"github.com/gofiber/fiber/v2/log"
 	"github.com/huydq/order-service/internal/core/domain/model"
@@ -12,10 +13,21 @@ import (
 
 // CreateOrder handles order creation
 func (uc *OrderService) CreateOrder(ctx context.Context, orderDto dto.CreateOrderRequestDTO) (*dto.CreateOrderResponseDTO, error) {
+	// Start APM transaction
+	tx := apm.DefaultTracer.StartTransaction("CreateOrder", "request")
+	defer tx.End()
+	ctx = apm.ContextWithTransaction(ctx, tx)
+
+	// Create order span
+	span, ctx := apm.StartSpan(ctx, "CreateOrder", "service")
+	defer span.End()
+
 	order := model.Order{
 		CustomerID: orderDto.CustomerID,
 	}
 
+	// Get products span
+	span, ctx = apm.StartSpan(ctx, "GetProducts", "service")
 	productReqDto := dto.GetProductsRequestDTO{
 		ProductIDs: make([]int, len(orderDto.Items)),
 	}
@@ -24,6 +36,7 @@ func (uc *OrderService) CreateOrder(ctx context.Context, orderDto dto.CreateOrde
 	}
 
 	productsResDto, err := uc.productServiceClient.GetProducts(ctx, productReqDto)
+	span.End()
 
 	if err != nil {
 		log.Errorf("GetProducts failed", err.Error())
@@ -48,9 +61,14 @@ func (uc *OrderService) CreateOrder(ctx context.Context, orderDto dto.CreateOrde
 		Order: order,
 		Items: orderItems,
 	}
+	// Create order in DB span
+	span, ctx = apm.StartSpan(ctx, "CreateOrderDB", "database")
 	orderId, err := uc.orderRepo.CreateOrder(ctx, orderAgg)
+	span.End()
+	
 	if err != nil {
 		log.Errorf("Create Order failed", err.Error())
+		apm.CaptureError(ctx, err).Send()
 		return nil, errors.New(util.ERR_INTERNAL_SERVER_ERROR)
 	}
 
